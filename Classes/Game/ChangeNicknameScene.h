@@ -25,29 +25,27 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "ui/CocosGUI.h"
 
-#include "Settings.hpp"
+#include "MainScene.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
-    class MainScene
+    class ChangeNicknameScene: public cocos2d::Scene, MainScene
     {
     public:
-        MainScene(): _director(cocos2d::Director::getInstance()), _visibleSize(_director->getVisibleSize()), _origin(_director->getVisibleOrigin()) {}
+        static cocos2d::Scene* createScene();
         
-        virtual void loadBackground(cocos2d::Node* node);
-        virtual void showHeadLabel(const std::string& text, cocos2d::Node* node);
-        virtual void enterPlayerNameTF(const cocos2d::ui::TextField::ccTextFieldCallback& callback, cocos2d::Node* node);
+        CREATE_FUNC(ChangeNicknameScene);
+        
+    public:
+        ChangeNicknameScene()
+        {
+            this->setName(__FUNCTION__);
+        }
+        
+        virtual bool init() override;
         
         void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
-        
-        virtual ~MainScene() {}
-        
-    protected:
-        cocos2d::Director* _director;
-        cocos2d::Size _visibleSize;
-        cocos2d::Vec2 _origin;
     };
 
 }

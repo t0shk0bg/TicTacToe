@@ -3,7 +3,7 @@
 #include <iostream>
 #include <climits>
 
-namespace TicTacToe {
+namespace NS_GameCore {
 
     #define CORE_BOARD_SIZE 3
 
@@ -22,25 +22,19 @@ namespace TicTacToe {
         basicSignX = 'X'
     };
 
-    enum Signature: char
-    {
-        signF = 'F',
-        signO = BasicSignature::basicSignO,
-        signX = BasicSignature::basicSignX
-    };
-
     struct Winner
     {
         BoardPosition coordinates[CORE_BOARD_SIZE];
-        Signature winnerSign;
+        BasicSignature winnerSign;
+        bool isWinner;
 
-        Winner(): winnerSign(Signature::signF) {}
+        Winner(): isWinner(false) {}
     };
 
     class GameCore
     {
     public:
-        GameCore(BasicSignature bot, BasicSignature player): _botSign(bot), _playerSign(player)
+        GameCore(BasicSignature bot, BasicSignature player): _botSign(bot), _playerSign(player), _saveWinner(false)
         {
             clearBoard();
         }
@@ -50,7 +44,7 @@ namespace TicTacToe {
         
         GameCore(): GameCore(BasicSignature::basicSignO, BasicSignature::basicSignX) {}
 
-        char modifyBoard(BoardPosition position, BasicSignature sign);
+        int8_t move(BoardPosition position, BasicSignature sign);
         void clearBoard();
 
         bool movesLeft() const;
@@ -64,11 +58,12 @@ namespace TicTacToe {
         
         BoardPosition findBestBotMove();
 
-        int8_t playerMove(BoardPosition position);
-        int8_t botMove(BoardPosition position);
-
     private:
-        int8_t evaluateBoard(bool saveWinner);
+        int8_t evaluateRow();
+        int8_t evaluateColumn();
+        int8_t evaluateDiagonals();
+        int8_t evaluateBoard();
+        
         int8_t minimax(uint8_t depth, bool isMax);
 
     private:
@@ -78,6 +73,15 @@ namespace TicTacToe {
         BasicSignature _playerSign;
 
         Winner _winner;
+        bool _saveWinner;
+
+    private:
+        enum Signature: char
+        {
+            signF = 'F',
+            signO = BasicSignature::basicSignO,
+            signX = BasicSignature::basicSignX
+        };
     };
 
 }

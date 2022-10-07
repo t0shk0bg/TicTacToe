@@ -40,19 +40,17 @@ namespace TicTacToe {
         return s_spritesContainer;
     }
 
-    bool SpritesContainer::saveSprite(Sprite* sprite, uint8_t id)
+    void SpritesContainer::add(Sprite* sprite, uint8_t id)
     {
         for(const auto& spriteNode: _spriteNodes)
             if(spriteNode.id == id)
-                return false;
+                remove(id);
         
         sprite->retain();
         _spriteNodes.push_back(SpriteNode(sprite, id));
-        
-        return true;
     }
 
-    bool SpritesContainer::removeSprite(uint8_t id)
+    void SpritesContainer::remove(uint8_t id)
     {
         for(auto it = _spriteNodes.begin(); it != _spriteNodes.end(); it++)
         {
@@ -63,14 +61,12 @@ namespace TicTacToe {
                 spriteNode.sprite->release();
                 _spriteNodes.erase(it);
                 
-                return true;
+                return;
             }
         }
-        
-        return false;
     }
 
-    Sprite* SpritesContainer::getSprite(uint8_t id)
+    Sprite* SpritesContainer::get(uint8_t id)
     {
         for(const auto& spriteNode: _spriteNodes)
             if(spriteNode.id == id)

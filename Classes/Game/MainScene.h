@@ -25,46 +25,29 @@
 #pragma once
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 
-#include "MainScene.hpp"
+#include "../Settings.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
-    enum GameOutcomeResult: uint8_t
-    {
-        none = 0,
-        win = 10,
-        draw = 11
-    };
-
-    struct GameOutcome
-    {
-        std::string winner;
-        GameOutcomeResult result;
-        
-        GameOutcome() {}
-        GameOutcome(const std::string& winr, GameOutcomeResult res): winner(winr), result(res) {}
-    };
-
-    class EndGameScene: public cocos2d::Scene, MainScene
+    class MainScene
     {
     public:
-        CREATE_FUNC(EndGameScene);
-        static cocos2d::Scene* createScene(GameOutcome gameOutcome);
+        MainScene(): _director(cocos2d::Director::getInstance()), _visibleSize(_director->getVisibleSize()), _origin(_director->getVisibleOrigin()) {}
         
-    public:
-        EndGameScene()
-        {
-            this->setName(__FUNCTION__);
-        }
+        virtual void loadBackground(cocos2d::Node* node);
+        virtual void showHeadLabel(const std::string& text, cocos2d::Node* node);
+        virtual void enterPlayerNameTF(const cocos2d::ui::TextField::ccTextFieldCallback& callback, cocos2d::Node* node);
         
-        virtual bool init() override;
+        void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
         
-        void ShowResultLabel();
-        void ShowMenu();
+        virtual ~MainScene() {}
         
-    public:
-        static GameOutcome s_gameOutcome;
+    protected:
+        cocos2d::Director* _director;
+        cocos2d::Size _visibleSize;
+        cocos2d::Vec2 _origin;
     };
 
 }

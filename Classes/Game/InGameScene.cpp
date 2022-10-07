@@ -26,7 +26,9 @@
 
 USING_NS_CC;
 
-namespace TicTacToe {
+namespace NS_Game {
+
+    using namespace NS_Game;
 
     Scene* InGameScene::createScene()
     {
@@ -38,10 +40,9 @@ namespace TicTacToe {
         if(!Scene::init())
             return false;
         
-        //Loading InGame background image
         loadBackground(this);
         
-        //Setting touch listener
+        //Setting touch listener event
         auto touchListener = EventListenerTouchOneByOne::create();
         
         touchListener->setSwallowTouches(true);
@@ -67,7 +68,7 @@ namespace TicTacToe {
             
             if(isWinner)
             {
-                Winner winner = _gameCore.getWinner();
+                auto& winner = _gameCore.getWinner();
                 
                 for(uint8_t i = 0; i < CORE_BOARD_SIZE; i++)
                     _sprites[winner.coordinates[i].row][winner.coordinates[i].col]->runAction(Blink::create(delay, ANIM_WIN_BLINKS));
@@ -94,11 +95,11 @@ namespace TicTacToe {
 
     void InGameScene::processTurns()
     {
-        playerTurn();
+        processTurn(Turn::player);
         
         if(_botAllowedToPlay)
         {
-            botTurn();
+            processTurn(Turn::bot);
             
             _eventDispatcher->resumeEventListenersForTarget(this);
             _botAllowedToPlay = false;
@@ -121,7 +122,7 @@ namespace TicTacToe {
         MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, EndGameScene::createScene(_gameOutcome), false));
     }
 
-    BoardPosition InGameScene::getPosition()
+    BoardPosition InGameScene::getPositionForPlayerTurn()
     {
         BoardPosition bPosition;
         
@@ -145,58 +146,54 @@ namespace TicTacToe {
         return bPosition;
     }
 
-    bool InGameScene::playerTurn()
+    void InGameScene::processTurn(Turn turn)
     {
-        auto playerPosition = getPosition();
-        
-        if(_gameCore.playerMove(playerPosition))
-            return false;
-        
-        std::string signFileName;
-        
-        signFileName = static_cast<char>(_gameCore.getPlayerSign());
-        signFileName += GAME_SIGN_EXTS;
-        
-        _sprites[playerPosition.row][playerPosition.col] = Sprite::create(signFileName);
-        
-        CCASSERT(_sprites[playerPosition.row][playerPosition.col],
-                 _sprites[playerPosition.row][playerPosition.col]->getResourceName().c_str());
-        
-        _sprites[playerPosition.row][playerPosition.col]->setPosition(Vec2(
-           (((_visibleSize.width - 174) / 3) * (playerPosition.col + 1) + 37),
-           ((_visibleSize.height / 3) * (2 - playerPosition.row)) + 93));
-        
-        this->addChild(_sprites[playerPosition.row][playerPosition.col], 1);
-        
-        scheduleOnce([this](float) -> void { _botAllowedToPlay = true; }, ANIM_BOT_TURN_DELAY, "botDisallowedToPlay");
-        
-        return true;
-    }
+        BoardPosition position;
+        BasicSignature signForThisTurn;
 
-    bool InGameScene::botTurn()
-    {
-        auto botPosition = _gameCore.findBestBotMove();
-        
-        if(_gameCore.botMove(botPosition))
-            return false;
-        
+        switch(turn)
+        {
+        case Turn::player:
+        {
+            position = getPositionForPlayerTurn();
+            signForThisTurn = getPlayerSign();
+
+            break;
+        }
+
+        case Turn::bot:
+        {
+            position = _gameCore.findBestBotMove();
+            signForThisTurn = getBotSign();
+
+            break;
+        }
+
+        default:
+            CCASSERT(true, "Invalid turn!");
+        }
+
+        if(_gameCode.move(position, signForThisTurn))
+            return;
+
         std::string signFileName;
         
-        signFileName = static_cast<char>(_gameCore.getBotSign());
+        signFileName = static_cast<char>(signForThisTurn);
         signFileName += GAME_SIGN_EXTS;
         
-        _sprites[botPosition.row][botPosition.col] = Sprite::create(signFileName);
-        
-        CCASSERT(_sprites[botPosition.row][botPosition.col],
-                 _sprites[botPosition.row][botPosition.col]->getResourceName().c_str());
-        
-        _sprites[botPosition.row][botPosition.col]->setPosition(Vec2(
-             (((_visibleSize.width - 174) / 3) * (botPosition.col + 1) + 37),
-             ((_visibleSize.height / 3) * (2 - botPosition.row)) + 93));
-        
-        this->addChild(_sprites[botPosition.row][botPosition.col], 1);
-        
-        return true;
+        _sprites[position.row][position.col] = Sprite::create(signFileName);
+
+        CCASSERT(_sprites[position.row][position.col],
+                 _sprites[position.row][position.col]->getResourceName().c_str());
+
+        _sprites[position.row][position.col]->setPosition(Vec2(
+           (((_visibleSize.width - 174) / 3) * (position.col + 1) + 37),
+           ((_visibleSize.height / 3) * (2 - position.row)) + 93));
+
+        this->addChild(_sprites[position.row][position.col], 1);
+
+        if(turn == Turn::player)
+            scheduleOnce([this](float) -> void { _botAllowedToPlay = true; }, ANIM_BOT_TURN_DELAY, "botDisallowedToPlay");
     }
 
 }

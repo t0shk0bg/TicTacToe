@@ -1,8 +1,8 @@
 #include "GameCore.h"
 
-namespace TicTacToe {
+namespace NS_GameCore {
 
-    char GameCore::modifyBoard(BoardPosition position, BasicSignature sign)
+    int8_t GameCore::move(BoardPosition position, BasicSignature sign)
     {
         if(_board[position.row][position.col] != Signature::signF)
             return -1;
@@ -35,12 +35,13 @@ namespace TicTacToe {
 
     bool GameCore::isWinner()
     {
-        evaluateBoard(true);
+        _saveWinner = true;
+
+        evaluateBoard();
+
+        _saveWinner = false;
         
-        if(_winner.winnerSign != Signature::signF)
-            return true;
-        
-        return false;
+        return _winner.isWinner;
     }
 
     bool GameCore::isDraw()
@@ -66,14 +67,13 @@ namespace TicTacToe {
         return _botSign;
     }
 
-    int8_t GameCore::evaluateBoard(bool saveWinner)
+    int8_t GameCore::evaluateRow()
     {
-        // Checking for Rows for X or O victory.
         for(uint8_t row = 0; row < CORE_BOARD_SIZE; row++)
         {
-            if(_board[row][0] == _board[row][1] && _board[row][1] == _board[row][2])
+            if((_board[row][0] == _board[row][1]) && (_board[row][1] == _board[row][2]))
             {
-                if(_board[row][0] != Signature::signF && saveWinner)
+                if((_board[row][0] != Signature::signF) && _saveWinner)
                 {
                     for(uint8_t i = 0; i < CORE_BOARD_SIZE; i++)
                     {
@@ -90,13 +90,17 @@ namespace TicTacToe {
                     return -10;
             }
         }
-        
-        // Checking for Columns for X or O victory.
+
+        return 0;
+    }
+
+    int8_t GameCore::evaluateColumn()
+    {
         for(uint8_t col = 0; col < CORE_BOARD_SIZE; col++)
         {
-            if(_board[0][col] == _board[1][col] && _board[1][col] == _board[2][col])
+            if((_board[0][col] == _board[1][col]) && (_board[1][col] == _board[2][col]))
             {
-                if(_board[0][col] != Signature::signF && saveWinner)
+                if((_board[0][col] != Signature::signF) && _saveWinner)
                 {
                     for(uint8_t i = 0; i < CORE_BOARD_SIZE; i++)
                     {
@@ -113,11 +117,15 @@ namespace TicTacToe {
                     return -10;
             }
         }
-        
-        // Checking for Diagonals for X or O victory.
-        if(_board[0][0] == _board[1][1] && _board[1][1] == _board[2][2])
+
+        return 0;
+    }
+
+    int8_t GameCore::evaluateDiagonals()
+    {
+        if((_board[0][0] == _board[1][1]) && (_board[1][1] == _board[2][2]))
         {
-            if(_board[0][0] != Signature::signF && saveWinner)
+            if((_board[0][0] != Signature::signF) && _saveWinner)
             {
                 for(uint8_t i = 0; i < CORE_BOARD_SIZE; i++)
                 {
@@ -134,9 +142,9 @@ namespace TicTacToe {
                 return -10;
         }
         
-        if(_board[0][2] == _board[1][1] && _board[1][1] == _board[2][0])
+        if((_board[0][2] == _board[1][1]) && (_board[1][1] == _board[2][0]))
         {
-            if(_board[0][2] != Signature::signF && saveWinner)
+            if((_board[0][2] != Signature::signF) && _saveWinner)
             {
                 for(uint8_t i = 0, c = (CORE_BOARD_SIZE - 1); i < CORE_BOARD_SIZE; i++, c--)
                 {
@@ -152,13 +160,26 @@ namespace TicTacToe {
             else if(_board[0][2] == _playerSign)
                 return -10;
         }
-        
+
         return 0;
+    }
+
+    int8_t GameCore::evaluateBoard()
+    {
+#define EVAL_BOARD_RESULT(F) result = F(); if(result) return result;
+        int8_t result;
+
+        EVAL_BOARD_RESULT(evaluateRow);
+        EVAL_BOARD_RESULT(evaluateColumn);
+        EVAL_BOARD_RESULT(evaluateDiagonals);
+        
+#undef EVALUATE_BOARD_RESULT
+        return result;
     }
 
     int8_t GameCore::minimax(uint8_t depth, bool isMax)
     {
-        int8_t score = evaluateBoard(false);
+        int8_t score = evaluateBoard();
         
         if(score == 10 || score == -10)
             return score;
@@ -226,16 +247,6 @@ namespace TicTacToe {
                 }
         
         return bestMove;
-    }
-
-    int8_t GameCore::playerMove(BoardPosition position)
-    {
-        return modifyBoard(position, _playerSign);
-    }
-
-    int8_t GameCore::botMove(BoardPosition position)
-    {
-        return modifyBoard(position, _botSign);
     }
 
 }

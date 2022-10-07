@@ -22,19 +22,19 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "EntryPointScene.h"
-#include "MainMenuScene.h"
+#include "ChangeNicknameScene.h"
+#include "SettingsScene.h"
 
 USING_NS_CC;
 
-namespace TicTacToe {
+namespace NS_Game {
 
-    Scene* EntryPointScene::createScene()
+    Scene* ChangeNicknameScene::createScene()
     {
-        return EntryPointScene::create();
+        return ChangeNicknameScene::create();
     }
 
-    bool EntryPointScene::init()
+    bool ChangeNicknameScene::init()
     {
         if(!Scene::init())
             return false;
@@ -42,16 +42,16 @@ namespace TicTacToe {
         //Loading background image
         loadBackground(this);
         
-        //Adding welcoming label
-        showHeadLabel(UI_WELCOME_MSG, this);
+        //Adding settings label
+        showHeadLabel(UI_SETTINGS, this);
         
         //Entering player's nickname
-        enterPlayerNameTF(CC_CALLBACK_2(EntryPointScene::playerNameTFevent, this), this);
+        enterPlayerNameTF(CC_CALLBACK_2(ChangeNicknameScene::playerNameTFevent, this), this);
         
         return true;
     }
 
-    void EntryPointScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
+    void ChangeNicknameScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
     {
         if(eType == ui::TextField::EventType::DETACH_WITH_IME)
         {
@@ -62,12 +62,9 @@ namespace TicTacToe {
             if(!playerNameTF->getString().length())
                 return;
             
-            auto userDefault = UserDefault::getInstance();
+            UserDefault::getInstance()->setStringForKey(UD_KEY_NICKNAME, playerNameTF->getString());
             
-            userDefault->setStringForKey(UD_KEY_NICKNAME, playerNameTF->getString());
-            userDefault->setStringForKey(UD_KEY_SIGNATURE, DEFAULT_GAME_SIGN);
-            
-            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), false));
+            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), true));
         }
     }
 

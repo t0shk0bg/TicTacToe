@@ -26,30 +26,26 @@
 
 #include "cocos2d.h"
 
-#include "MainScene.hpp"
+#include "MainScene.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
-    class SettingsScene: public cocos2d::Scene, MainScene
+    class EntryPointScene: public cocos2d::Scene, MainScene
     {
     public:
-        CREATE_FUNC(SettingsScene);
         static cocos2d::Scene* createScene();
         
+        CREATE_FUNC(EntryPointScene);
+        
     public:
-        SettingsScene()
+        EntryPointScene()
         {
             this->setName(__FUNCTION__);
         }
         
         virtual bool init() override;
-        virtual void update(float delta) override;
-        virtual void onExit() override;
         
-        void ShowMenu();
-
-    private:
-        static bool s_showMenuUpdate;
+        void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
     };
 
 }

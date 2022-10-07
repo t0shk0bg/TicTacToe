@@ -22,20 +22,24 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "MainMenuScene.h"
+#include "EndGameScene.h"
 #include "InGameScene.h"
-#include "SettingsScene.h"
+#include "MainMenuScene.h"
 
 USING_NS_CC;
 
-namespace TicTacToe {
+namespace NS_Game {
 
-    Scene* MainMenuScene::createScene()
+    GameOutcome EndGameScene::s_gameOutcome;
+
+    Scene* EndGameScene::createScene(GameOutcome gameOutcome)
     {
-        return MainMenuScene::create();
+        EndGameScene::s_gameOutcome = gameOutcome;
+        
+        return EndGameScene::create();
     }
 
-    bool MainMenuScene::init()
+    bool EndGameScene::init()
     {
         if(!Scene::init())
             return false;
@@ -43,38 +47,56 @@ namespace TicTacToe {
         //Loading background image
         loadBackground(this);
         
-        //Adding welcoming label
-        showHeadLabel((std::string(UI_WELCOME_MSG_WN) + UserDefault::getInstance()->getStringForKey(UD_KEY_NICKNAME)), this);
+        //Showing outcome label
+        ShowResultLabel();
         
-        //Showing the main menu
         ShowMenu();
         
         return true;
     }
 
-    void MainMenuScene::ShowMenu()
+    void EndGameScene::ShowResultLabel()
     {
-        Vector<MenuItem*> MainMenuItems;
+        std::string outcomeMSG;
+        
+        switch(EndGameScene::s_gameOutcome.result)
+        {
+            case GameOutcomeResult::win:
+                outcomeMSG += UI_WINNER_IS + EndGameScene::s_gameOutcome.winner;
+                break;
+                
+            case GameOutcomeResult::draw:
+                outcomeMSG += UI_DRAW;
+                break;
+                
+            default:
+                CCASSERT(true, "Invalid game outcome result");
+                break;
+        }
+        
+        showHeadLabel(outcomeMSG, this);
+    }
 
+    void EndGameScene::ShowMenu()
+    {
+        Vector<MenuItem*> menuItems;
+        
         MenuItemFont::setFontSize(24);
         
-        MainMenuItems.pushBack(MenuItemFont::create(UI_START_GAME, [this](Ref* pSender) -> void {
+        menuItems.pushBack(MenuItemFont::create(UI_START_GAME, [this](Ref* pSender) -> void {
             MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, InGameScene::createScene(), false));
         }));
-        MainMenuItems.pushBack(MenuItemFont::create(UI_SETTINGS, [this](Ref* pSender) -> void {
-            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), false));
-        }));
-        MainMenuItems.pushBack(MenuItemFont::create(UI_EXIT, [this](Ref* pSender) -> void { 
-            MainScene::_director->end(); 
+        menuItems.pushBack(MenuItemFont::create(UI_BACK_TO_MENU, [this](Ref* pSender) -> void {
+            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), false));
         }));
         
-        auto mainMenu = Menu::createWithArray(MainMenuItems);
+        auto menu = Menu::createWithArray(menuItems);
         
-        mainMenu->setColor(Color3B(0, 0, 0));
-        mainMenu->alignItemsVerticallyWithPadding(10);
-        mainMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
+        menu->setColor(Color3B(0, 0, 0));
+        menu->alignItemsVerticallyWithPadding(10);
+        menu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
         
-        this->addChild(mainMenu, 1);
+        this->addChild(menu, 1);
     }
 
 }

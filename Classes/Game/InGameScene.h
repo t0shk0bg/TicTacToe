@@ -26,11 +26,11 @@
 
 #include "cocos2d.h"
 
-#include "GameCore.h"
+#include "../GameCore/GameCore.h"
 #include "EndGameScene.h"
-#include "MainScene.hpp"
+#include "MainScene.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
     class InGameScene: public cocos2d::Scene, MainScene
     {
@@ -40,7 +40,7 @@ namespace TicTacToe {
         
     public:
         InGameScene():
-            _gameCore(GameCore(static_cast<BasicSignature>(cocos2d::UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
+            _gameCore(NS_Game::GameCore(static_cast<NS_Game::BasicSignature>(cocos2d::UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
             _botAllowedToPlay(false)
         {
             this->setName(__FUNCTION__);
@@ -54,19 +54,26 @@ namespace TicTacToe {
         bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
         void delayedEndGameScene(float a);
         
-        BoardPosition getPosition();
+        NS_Game::BoardPosition getPositionForPlayerTurn();
         
-        bool playerTurn();
-        bool botTurn();
+        void processTurn(Turn turn);
         
     private:
-        GameCore _gameCore;
+        NS_Game::GameCore _gameCore;
         cocos2d::Sprite* _sprites[CORE_BOARD_SIZE][CORE_BOARD_SIZE];
         
         cocos2d::Vec2 _playerMove;
         bool _botAllowedToPlay;
         
         GameOutcome _gameOutcome;
+
+    private:
+        enum Turn: uint8_t
+        {
+            none = 0,
+            player,
+            bot
+        };
     };
 
 }

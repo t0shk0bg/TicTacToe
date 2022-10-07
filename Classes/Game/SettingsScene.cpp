@@ -28,7 +28,7 @@
 
 USING_NS_CC;
 
-namespace TicTacToe {
+namespace NS_Game {
 
     bool SettingsScene::s_showMenuUpdate = true;
 

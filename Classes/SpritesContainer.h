@@ -42,14 +42,15 @@ namespace TicTacToe {
     public:
         static SpritesContainer* getInstance();
         
-        bool saveSprite(cocos2d::Sprite* sprite, uint8_t id);
-        bool removeSprite(uint8_t id);
+        void add(cocos2d::Sprite* sprite, uint8_t id);
+        void remove(uint8_t id);
         
-        cocos2d::Sprite* getSprite(uint8_t id);
+        cocos2d::Sprite* get(uint8_t id);
         
     private:
         SpritesContainer() {};
         SpritesContainer(SpritesContainer const&) = delete;
+        
         void operator=(SpritesContainer const&) = delete;
         
     private:

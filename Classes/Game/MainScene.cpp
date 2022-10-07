@@ -26,29 +26,29 @@
 
 USING_NS_CC;
 
-namespace TicTacToe {
+namespace NS_Game {
 
     void MainScene::loadBackground(Node* node)
     {
-        Sprite * backgroundSprite;
-        
-        if(node->getName() != IN_GAME_SCENE_NAME)
+        std::string backgroundImageName;
+        Vec2 backgroundScale;
+
+        if(node->getName() == IN_GAME_SCENE_NAME)
         {
-            backgroundSprite = Sprite::create(IMAGE_MENU_BG);
-            
-            CCASSERT(backgroundSprite, backgroundSprite->getResourceName().c_str());
-            
-            backgroundSprite->setScale(1.3f);
+            backgroundImageName = IMAGE_IN_GAME_BG;
+            backgroundScale.set(1.064f, 0.9f);
         }
         else
         {
-            backgroundSprite = Sprite::create(IMAGE_IN_GAME_BG);
-            
-            CCASSERT(backgroundSprite, backgroundSprite->getResourceName().c_str());
-            
-            backgroundSprite->setScale(1.064f, 0.9f);
+            backgroundImageName = IMAGE_MENU_BG;
+            backgroundScale.set(1.3f, 1.3f);
         }
-        
+
+        auto backgroundSprite = Sprite::create(backgroundImageName);
+
+        CCASSERT(backgroundSprite, backgroundSprite->getResourceName().c_str());
+
+        backgroundSprite->setScale(backgroundScale.x, backgroundScale.y);
         backgroundSprite->setPosition(Vec2((_visibleSize.width / 2), (_visibleSize.height / 2) + _origin.y));
 
         node->addChild(backgroundSprite, 0);

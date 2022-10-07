@@ -26,25 +26,45 @@
 
 #include "cocos2d.h"
 
-#include "MainScene.hpp"
+#include "MainScene.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
-    class MainMenuScene: public cocos2d::Scene, MainScene
+    enum GameOutcomeResult: uint8_t
+    {
+        none = 0,
+        win = 10,
+        draw = 11
+    };
+
+    struct GameOutcome
+    {
+        std::string winner;
+        GameOutcomeResult result;
+        
+        GameOutcome() {}
+        GameOutcome(const std::string& winr, GameOutcomeResult res): winner(winr), result(res) {}
+    };
+
+    class EndGameScene: public cocos2d::Scene, MainScene
     {
     public:
-        CREATE_FUNC(MainMenuScene);
-        static cocos2d::Scene* createScene();
+        CREATE_FUNC(EndGameScene);
+        static cocos2d::Scene* createScene(GameOutcome gameOutcome);
         
     public:
-        MainMenuScene()
+        EndGameScene()
         {
             this->setName(__FUNCTION__);
         }
         
         virtual bool init() override;
         
+        void ShowResultLabel();
         void ShowMenu();
+        
+    public:
+        static GameOutcome s_gameOutcome;
     };
 
 }
