@@ -22,61 +22,32 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "SpritesContainer.h"
+#pragma once
 
-USING_NS_CC;
+#include "cocos2d.h"
+#include "ui/CocosGUI.h"
+
+#include "Settings.hpp"
 
 namespace TicTacToe {
 
-    SpritesContainer* SpritesContainer::s_spritesContainer = nullptr;
-
-    SpritesContainer* SpritesContainer::getInstance()
+    class MainScene
     {
-        if(s_spritesContainer == nullptr)
-        {
-            s_spritesContainer = new (std::nothrow) SpritesContainer;
-        }
-
-        return s_spritesContainer;
-    }
-
-    bool SpritesContainer::saveSprite(Sprite* sprite, uint8_t id)
-    {
-        for(const auto& spriteNode: _spriteNodes)
-            if(spriteNode.id == id)
-                return false;
+    public:
+        MainScene(): _director(cocos2d::Director::getInstance()), _visibleSize(_director->getVisibleSize()), _origin(_director->getVisibleOrigin()) {}
         
-        sprite->retain();
-        _spriteNodes.push_back(SpriteNode(sprite, id));
+        virtual void loadBackground(cocos2d::Node* node);
+        virtual void showHeadLabel(const std::string& text, cocos2d::Node* node);
+        virtual void enterPlayerNameTF(const cocos2d::ui::TextField::ccTextFieldCallback& callback, cocos2d::Node* node);
         
-        return true;
-    }
-
-    bool SpritesContainer::removeSprite(uint8_t id)
-    {
-        for(auto it = _spriteNodes.begin(); it != _spriteNodes.end(); it++)
-        {
-            auto spriteNode = *it;
-            
-            if(spriteNode.id == id)
-            {
-                spriteNode.sprite->release();
-                _spriteNodes.erase(it);
-                
-                return true;
-            }
-        }
+        void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
         
-        return false;
-    }
-
-    Sprite* SpritesContainer::getSprite(uint8_t id)
-    {
-        for(const auto& spriteNode: _spriteNodes)
-            if(spriteNode.id == id)
-                return spriteNode.sprite;
+        virtual ~MainScene() {}
         
-        return nullptr;
-    }
+    protected:
+        cocos2d::Director* _director;
+        cocos2d::Size _visibleSize;
+        cocos2d::Vec2 _origin;
+    };
 
 }

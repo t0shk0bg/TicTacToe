@@ -26,43 +26,45 @@
 
 #include "cocos2d.h"
 
-#include "GameLayout.hpp"
+#include "MainScene.hpp"
 
-USING_NS_CC;
+namespace TicTacToe {
 
-enum GameOutcomeResult: uint8_t
-{
-    none = 0,
-    win = 10,
-    draw = 11
-};
-
-struct GameOutcome
-{
-    std::string winner;
-    GameOutcomeResult result;
-    
-    GameOutcome() {}
-    GameOutcome(const std::string& winr, GameOutcomeResult res): winner(winr), result(res) {}
-};
-
-class EndGameScene: public Scene, GameLayout
-{
-public:
-    CREATE_FUNC(EndGameScene);
-    static Scene* createScene(GameOutcome gameOutcome);
-    
-public:
-    EndGameScene()
+    enum GameOutcomeResult: uint8_t
     {
-        this->setName(__FUNCTION__);
-    }
-    
-    virtual bool init() override;
-    
-    void ShowResultLabel();
-    void ShowMenu();
-    
-public:
-    static GameOutcome s_gameOutcome;
-};
+        none = 0,
+        win = 10,
+        draw = 11
+    };
+
+    struct GameOutcome
+    {
+        std::string winner;
+        GameOutcomeResult result;
+        
+        GameOutcome() {}
+        GameOutcome(const std::string& winr, GameOutcomeResult res): winner(winr), result(res) {}
+    };
+
+    class EndGameScene: public cocos2d::Scene, MainScene
+    {
+    public:
+        CREATE_FUNC(EndGameScene);
+        static cocos2d::Scene* createScene(GameOutcome gameOutcome);
+        
+    public:
+        EndGameScene()
+        {
+            this->setName(__FUNCTION__);
+        }
+        
+        virtual bool init() override;
+        
+        void ShowResultLabel();
+        void ShowMenu();
+        
+    public:
+        static GameOutcome s_gameOutcome;
+    };
+
+}

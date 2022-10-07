@@ -26,25 +26,30 @@
 
 #include "cocos2d.h"
 
-#include "GameLayout.hpp"
+#include "MainScene.hpp"
 
-USING_NS_CC;
+namespace TicTacToe {
 
-class SettingsScene: public Scene, GameLayout
-{
-public:
-    CREATE_FUNC(SettingsScene);
-    static cocos2d::Scene* createScene();
-    
-public:
-    SettingsScene()
+    class SettingsScene: public cocos2d::Scene, MainScene
     {
-        this->setName(__FUNCTION__);
-    }
-    
-    virtual bool init() override;
-    virtual void update(float delta) override;
-    virtual void onExit() override;
-    
-    void ShowMenu();
-};
+    public:
+        CREATE_FUNC(SettingsScene);
+        static cocos2d::Scene* createScene();
+        
+    public:
+        SettingsScene()
+        {
+            this->setName(__FUNCTION__);
+        }
+        
+        virtual bool init() override;
+        virtual void update(float delta) override;
+        virtual void onExit() override;
+        
+        void ShowMenu();
+
+    private:
+        static bool s_showMenuUpdate;
+    };
+
+}

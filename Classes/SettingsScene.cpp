@@ -26,79 +26,84 @@
 #include "MainMenuScene.h"
 #include "ChangeNicknameScene.h"
 
-static bool showMenuUpdate = true;
+USING_NS_CC;
 
-Scene* SettingsScene::createScene()
-{
-    return SettingsScene::create();
-}
+namespace TicTacToe {
 
-bool SettingsScene::init()
-{
-    if(!Scene::init())
-        return false;
-    
-    //Loading background image
-    loadBackground(this);
-    
-    //Adding settings label
-    showHeadLabel(UI_SETTINGS, this);
-    
-    //Showing the settings menu
-    ShowMenu();
-    
-    scheduleUpdate();
-    
-    return true;
-}
+    bool SettingsScene::s_showMenuUpdate = true;
 
-void SettingsScene::update(float delta)
-{
-    //Updating the settings menu
-    ShowMenu();
-    
-    Scene::update(delta);
-}
-
-void SettingsScene::onExit()
-{
-    showMenuUpdate = true;
-    
-    Scene::onExit();
-}
-
-void SettingsScene::ShowMenu()
-{
-    if(showMenuUpdate)
+    Scene* SettingsScene::createScene()
     {
-        Vector<MenuItem*> settingsMenuItems;
-        UserDefault* userDefault = UserDefault::getInstance();
-        
-        MenuItemFont::setFontSize(24);
-        
-        settingsMenuItems.pushBack(MenuItemFont::create(UI_CHANGE_NICKNAME, [=](Ref* pSender) {
-            GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, ChangeNicknameScene::createScene(), false));
-        }));
-        settingsMenuItems.pushBack(MenuItemFont::create(UI_PLAYER_SIGN + userDefault->getStringForKey(UD_KEY_SIGNATURE), [=](Ref* pSender) {
-            showMenuUpdate = true;
-            
-            userDefault->setStringForKey(UD_KEY_SIGNATURE, userDefault->getStringForKey(UD_KEY_SIGNATURE) == GAME_SIGN_X ? GAME_SIGN_O : GAME_SIGN_X);
-            
-            this->removeChildByName("settingsMenu");
-        }));
-        settingsMenuItems.pushBack(MenuItemFont::create(UI_GO_BACK, [&](Ref* pSender) {
-            GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), true));
-        }));
-        
-        auto settingsMenu = Menu::createWithArray(settingsMenuItems);
-        
-        settingsMenu->setColor(Color3B(0, 0, 0));
-        settingsMenu->alignItemsVerticallyWithPadding(10);
-        settingsMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
-        
-        this->addChild(settingsMenu, 1, "settingsMenu");
-        
-        showMenuUpdate = false;
+        return SettingsScene::create();
     }
-}
 
+    bool SettingsScene::init()
+    {
+        if(!Scene::init())
+            return false;
+        
+        //Loading background image
+        loadBackground(this);
+        
+        //Adding settings label
+        showHeadLabel(UI_SETTINGS, this);
+        
+        //Showing the settings menu
+        ShowMenu();
+        
+        scheduleUpdate();
+        
+        return true;
+    }
+
+    void SettingsScene::update(float delta)
+    {
+        //Updating the settings menu
+        ShowMenu();
+        
+        Scene::update(delta);
+    }
+
+    void SettingsScene::onExit()
+    {
+        s_showMenuUpdate = true;
+        
+        Scene::onExit();
+    }
+
+    void SettingsScene::ShowMenu()
+    {
+        if(s_showMenuUpdate)
+        {
+            Vector<MenuItem*> settingsMenuItems;
+            UserDefault* userDefault = UserDefault::getInstance();
+            
+            MenuItemFont::setFontSize(24);
+            
+            settingsMenuItems.pushBack(MenuItemFont::create(UI_CHANGE_NICKNAME, [this](Ref* pSender) -> void {
+                MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, ChangeNicknameScene::createScene(), false));
+            }));
+            settingsMenuItems.pushBack(MenuItemFont::create(UI_PLAYER_SIGN + userDefault->getStringForKey(UD_KEY_SIGNATURE), [&](Ref* pSender) -> void {
+                SettingsScene::s_showMenuUpdate = true;
+                
+                userDefault->setStringForKey(UD_KEY_SIGNATURE, userDefault->getStringForKey(UD_KEY_SIGNATURE) == GAME_SIGN_X ? GAME_SIGN_O : GAME_SIGN_X);
+                
+                this->removeChildByName("settingsMenu");
+            }));
+            settingsMenuItems.pushBack(MenuItemFont::create(UI_GO_BACK, [this](Ref* pSender) -> void {
+                MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), true));
+            }));
+            
+            auto settingsMenu = Menu::createWithArray(settingsMenuItems);
+            
+            settingsMenu->setColor(Color3B(0, 0, 0));
+            settingsMenu->alignItemsVerticallyWithPadding(10);
+            settingsMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
+            
+            this->addChild(settingsMenu, 1, "settingsMenu");
+            
+            s_showMenuUpdate = false;
+        }
+    }
+
+}

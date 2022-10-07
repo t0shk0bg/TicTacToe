@@ -22,52 +22,59 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "Settings.hpp"
 #include "MainMenuScene.h"
 #include "InGameScene.h"
 #include "SettingsScene.h"
 
-Scene* MainMenuScene::createScene()
-{
-    return MainMenuScene::create();
-}
+USING_NS_CC;
 
-bool MainMenuScene::init()
-{
-    if(!Scene::init())
-        return false;
-    
-    //Loading background image
-    loadBackground(this);
-    
-    //Adding welcoming label
-    showHeadLabel((std::string(UI_WELCOME_MSG_WN) + UserDefault::getInstance()->getStringForKey(UD_KEY_NICKNAME)), this);
-    
-    //Showing the main menu
-    ShowMenu();
-    
-    return true;
-}
+namespace TicTacToe {
 
-void MainMenuScene::ShowMenu()
-{
-    Vector<MenuItem*> MainMenuItems;
+    Scene* MainMenuScene::createScene()
+    {
+        return MainMenuScene::create();
+    }
 
-    MenuItemFont::setFontSize(24);
-    
-    MainMenuItems.pushBack(MenuItemFont::create(UI_START_GAME, [&](Ref* pSender) {
-        GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, InGameScene::createScene(), false));
-    }));
-    MainMenuItems.pushBack(MenuItemFont::create(UI_SETTINGS, [&](Ref* pSender) {
-        GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), false));
-    }));
-    MainMenuItems.pushBack(MenuItemFont::create(UI_EXIT, [&](Ref* pSender) { Director::getInstance()->end(); }));
-    
-    auto mainMenu = Menu::createWithArray(MainMenuItems);
-    
-    mainMenu->setColor(Color3B(0, 0, 0));
-    mainMenu->alignItemsVerticallyWithPadding(10);
-    mainMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
-    
-    this->addChild(mainMenu, 1);
+    bool MainMenuScene::init()
+    {
+        if(!Scene::init())
+            return false;
+        
+        //Loading background image
+        loadBackground(this);
+        
+        //Adding welcoming label
+        showHeadLabel((std::string(UI_WELCOME_MSG_WN) + UserDefault::getInstance()->getStringForKey(UD_KEY_NICKNAME)), this);
+        
+        //Showing the main menu
+        ShowMenu();
+        
+        return true;
+    }
+
+    void MainMenuScene::ShowMenu()
+    {
+        Vector<MenuItem*> MainMenuItems;
+
+        MenuItemFont::setFontSize(24);
+        
+        MainMenuItems.pushBack(MenuItemFont::create(UI_START_GAME, [this](Ref* pSender) -> void {
+            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, InGameScene::createScene(), false));
+        }));
+        MainMenuItems.pushBack(MenuItemFont::create(UI_SETTINGS, [this](Ref* pSender) -> void {
+            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), false));
+        }));
+        MainMenuItems.pushBack(MenuItemFont::create(UI_EXIT, [this](Ref* pSender) -> void { 
+            MainScene::_director->end(); 
+        }));
+        
+        auto mainMenu = Menu::createWithArray(MainMenuItems);
+        
+        mainMenu->setColor(Color3B(0, 0, 0));
+        mainMenu->alignItemsVerticallyWithPadding(10);
+        mainMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
+        
+        this->addChild(mainMenu, 1);
+    }
+
 }

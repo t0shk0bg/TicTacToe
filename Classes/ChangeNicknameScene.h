@@ -26,24 +26,26 @@
 
 #include "cocos2d.h"
 
-#include "GameLayout.hpp"
+#include "MainScene.hpp"
 
-USING_NS_CC;
+namespace TicTacToe {
 
-class ChangeNicknameScene: public Scene, GameLayout
-{
-public:
-    static cocos2d::Scene* createScene();
-    
-    CREATE_FUNC(ChangeNicknameScene);
-    
-public:
-    ChangeNicknameScene()
+    class ChangeNicknameScene: public cocos2d::Scene, MainScene
     {
-        this->setName(__FUNCTION__);
-    }
-    
-    virtual bool init() override;
-    
-    void playerNameTFevent(Ref* sender, ui::TextField::EventType eType);
-};
+    public:
+        static cocos2d::Scene* createScene();
+        
+        CREATE_FUNC(ChangeNicknameScene);
+        
+    public:
+        ChangeNicknameScene()
+        {
+            this->setName(__FUNCTION__);
+        }
+        
+        virtual bool init() override;
+        
+        void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
+    };
+
+}

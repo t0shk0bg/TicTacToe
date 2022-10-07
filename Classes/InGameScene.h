@@ -28,43 +28,45 @@
 
 #include "GameCore.h"
 #include "EndGameScene.h"
-#include "GameLayout.hpp"
+#include "MainScene.hpp"
 
-USING_NS_CC;
+namespace TicTacToe {
 
-class InGameScene: public Scene, GameLayout
-{
-public:
-    CREATE_FUNC(InGameScene);
-    static cocos2d::Scene* createScene();
-    
-public:
-    InGameScene():
-        _gameCore(GameCore(static_cast<BasicSignature>(UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
-        _botAllowedToPlay(false)
+    class InGameScene: public cocos2d::Scene, MainScene
     {
-        this->setName(__FUNCTION__);
-    }
-    
-    virtual bool init() override;
-    virtual void update(float dt) override;
-    
-    void processTurns();
-    
-    bool onTouchBegan(Touch* touch, Event* event);
-    void delayedEndGameScene(float a);
-    
-    BoardPosition getPosition();
-    
-    bool playerTurn();
-    bool botTurn();
-    
-private:
-    GameCore _gameCore;
-    Sprite* _sprites[CORE_BOARD_SIZE][CORE_BOARD_SIZE];
-    
-    Vec2 _playerMove;
-    bool _botAllowedToPlay;
-    
-    GameOutcome _gameOutcome;
-};
+    public:
+        CREATE_FUNC(InGameScene);
+        static cocos2d::Scene* createScene();
+        
+    public:
+        InGameScene():
+            _gameCore(GameCore(static_cast<BasicSignature>(cocos2d::UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
+            _botAllowedToPlay(false)
+        {
+            this->setName(__FUNCTION__);
+        }
+        
+        virtual bool init() override;
+        virtual void update(float dt) override;
+        
+        void processTurns();
+        
+        bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
+        void delayedEndGameScene(float a);
+        
+        BoardPosition getPosition();
+        
+        bool playerTurn();
+        bool botTurn();
+        
+    private:
+        GameCore _gameCore;
+        cocos2d::Sprite* _sprites[CORE_BOARD_SIZE][CORE_BOARD_SIZE];
+        
+        cocos2d::Vec2 _playerMove;
+        bool _botAllowedToPlay;
+        
+        GameOutcome _gameOutcome;
+    };
+
+}

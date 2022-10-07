@@ -25,41 +25,47 @@
 #include "ChangeNicknameScene.h"
 #include "SettingsScene.h"
 
-Scene* ChangeNicknameScene::createScene()
-{
-    return ChangeNicknameScene::create();
-}
+USING_NS_CC;
 
-bool ChangeNicknameScene::init()
-{
-    if(!Scene::init())
-        return false;
-    
-    //Loading background image
-    loadBackground(this);
-    
-    //Adding settings label
-    showHeadLabel(UI_SETTINGS, this);
-    
-    //Entering player's nickname
-    enterPlayerNameTF(CC_CALLBACK_2(ChangeNicknameScene::playerNameTFevent, this), this);
-    
-    return true;
-}
+namespace TicTacToe {
 
-void ChangeNicknameScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
-{
-    if(eType == ui::TextField::EventType::DETACH_WITH_IME)
+    Scene* ChangeNicknameScene::createScene()
     {
-        ui::TextField* playerNameTF = dynamic_cast<ui::TextField*>(sender);
-        
-        CCASSERT(playerNameTF, "Unable to perform dynamic conversion!");
-        
-        if(!playerNameTF->getString().length())
-            return;
-        
-        UserDefault::getInstance()->setStringForKey(UD_KEY_NICKNAME, playerNameTF->getString());
-        
-        GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), true));
+        return ChangeNicknameScene::create();
     }
+
+    bool ChangeNicknameScene::init()
+    {
+        if(!Scene::init())
+            return false;
+        
+        //Loading background image
+        loadBackground(this);
+        
+        //Adding settings label
+        showHeadLabel(UI_SETTINGS, this);
+        
+        //Entering player's nickname
+        enterPlayerNameTF(CC_CALLBACK_2(ChangeNicknameScene::playerNameTFevent, this), this);
+        
+        return true;
+    }
+
+    void ChangeNicknameScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
+    {
+        if(eType == ui::TextField::EventType::DETACH_WITH_IME)
+        {
+            ui::TextField* playerNameTF = dynamic_cast<ui::TextField*>(sender);
+            
+            CCASSERT(playerNameTF, "Unable to perform dynamic conversion!");
+            
+            if(!playerNameTF->getString().length())
+                return;
+            
+            UserDefault::getInstance()->setStringForKey(UD_KEY_NICKNAME, playerNameTF->getString());
+            
+            MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), true));
+        }
+    }
+
 }
