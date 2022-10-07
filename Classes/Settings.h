@@ -26,7 +26,7 @@
 
 #include "cocos2d.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
 	//Background sprite IDs for SpritesContainer
 	#define MENU_BACKGROUND_SPRITE_ID   0

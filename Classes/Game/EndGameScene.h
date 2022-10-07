@@ -60,7 +60,10 @@ namespace NS_Game {
         
         virtual bool init() override;
         
+        //Displays game outcome
         void ShowResultLabel();
+        
+        //Displays main scene menu
         void ShowMenu();
         
     public:

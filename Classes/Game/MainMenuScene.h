@@ -44,6 +44,7 @@ namespace NS_Game {
         
         virtual bool init() override;
         
+        /// Displays main menu
         void ShowMenu();
     };
 

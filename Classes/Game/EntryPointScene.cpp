@@ -38,20 +38,17 @@ namespace NS_Game {
     {
         if(!Scene::init())
             return false;
-        
-        //Loading background image
+
         loadBackground(this);
         
-        //Adding welcoming label
         showHeadLabel(UI_WELCOME_MSG, this);
         
-        //Entering player's nickname
-        enterPlayerNameTF(CC_CALLBACK_2(EntryPointScene::playerNameTFevent, this), this);
+        enterPlayerNameTextField(CC_CALLBACK_2(EntryPointScene::playerNameTextFieldEvent, this), this);
         
         return true;
     }
 
-    void EntryPointScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
+    void EntryPointScene::playerNameTextFieldEvent(Ref* sender, ui::TextField::EventType eType)
     {
         if(eType == ui::TextField::EventType::DETACH_WITH_IME)
         {

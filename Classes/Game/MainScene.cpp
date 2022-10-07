@@ -28,7 +28,7 @@ USING_NS_CC;
 
 namespace NS_Game {
 
-    void MainScene::loadBackground(Node* node)
+    void MainScene::loadBackground(Scene* node)
     {
         std::string backgroundImageName;
         Vec2 backgroundScale;
@@ -54,7 +54,7 @@ namespace NS_Game {
         node->addChild(backgroundSprite, 0);
     }
 
-    void MainScene::showHeadLabel(const std::string& text, Node* node)
+    void MainScene::showHeadLabel(const std::string& text, Scene* scene)
     {
         auto headLabel = Label::createWithTTF(text, FONT_PATH(FONT_MARKER_FELT), 28);
         
@@ -63,10 +63,10 @@ namespace NS_Game {
         headLabel->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 17) + _origin.y));
         headLabel->setColor(Color3B(0, 0, 0));
         
-        node->addChild(headLabel, 1);
+        scene->addChild(headLabel, 1);
     }
 
-    void MainScene::enterPlayerNameTF(const ui::TextField::ccTextFieldCallback& callback, Node* node)
+    void MainScene::enterPlayerNameTextField(const ui::TextField::ccTextFieldCallback& callback, Scene* scene)
     {
         auto playerNameTextField = ui::TextField::create(UI_ENTER_NICKNAME, FONT_PATH(FONT_MARKER_FELT), 28);
         
@@ -85,7 +85,7 @@ namespace NS_Game {
 
         playerNameTextField->addEventListener(callback);
 
-        node->addChild(playerNameTextField, 1);
+        scene->addChild(playerNameTextField, 1);
     }
 
 }

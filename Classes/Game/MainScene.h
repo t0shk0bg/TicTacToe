@@ -36,11 +36,27 @@ namespace NS_Game {
     public:
         MainScene(): _director(cocos2d::Director::getInstance()), _visibleSize(_director->getVisibleSize()), _origin(_director->getVisibleOrigin()) {}
         
-        virtual void loadBackground(cocos2d::Node* node);
-        virtual void showHeadLabel(const std::string& text, cocos2d::Node* node);
-        virtual void enterPlayerNameTF(const cocos2d::ui::TextField::ccTextFieldCallback& callback, cocos2d::Node* node);
+        /// Setting a background for scene
+        /// - Parameter scene: A given scene
+        virtual void loadBackground(cocos2d::Scene* scene);
         
-        void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
+        /// Adding head label to scene
+        /// - Parameters:
+        ///   - text: Label text message
+        ///   - scene: A given scene
+        virtual void showHeadLabel(const std::string& text, cocos2d::Scene* scene);
+        
+        /// Adding a "Player name" text field to scene
+        /// - Parameters:
+        ///   - callback: Callback of TextField event
+        ///   - scene: A given scene
+        virtual void enterPlayerNameTextField(const cocos2d::ui::TextField::ccTextFieldCallback& callback, cocos2d::Scene* scene);
+        
+        /// A callback which would be called when a TextField event happens.
+        /// - Parameters:
+        ///   - sender: Event sender
+        ///   - eType: Event type
+        void playerNameTextFieldEvent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
         
         virtual ~MainScene() {}
         

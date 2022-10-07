@@ -40,13 +40,10 @@ namespace NS_Game {
         if(!Scene::init())
             return false;
         
-        //Loading background image
         loadBackground(this);
         
-        //Adding welcoming label
         showHeadLabel((std::string(UI_WELCOME_MSG_WN) + UserDefault::getInstance()->getStringForKey(UD_KEY_NICKNAME)), this);
         
-        //Showing the main menu
         ShowMenu();
         
         return true;

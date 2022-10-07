@@ -45,7 +45,11 @@ namespace NS_Game {
         
         virtual bool init() override;
         
-        void playerNameTFevent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
+        /// A callback which would be called when a TextField event happens.
+        /// - Parameters:
+        ///   - sender: Event sender
+        ///   - eType: Event type
+        void playerNameTextFieldEvent(cocos2d::Ref* sender, cocos2d::ui::TextField::EventType eType);
     };
 
 }

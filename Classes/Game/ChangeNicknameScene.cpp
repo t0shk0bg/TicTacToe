@@ -39,14 +39,11 @@ namespace NS_Game {
         if(!Scene::init())
             return false;
         
-        //Loading background image
         loadBackground(this);
         
-        //Adding settings label
         showHeadLabel(UI_SETTINGS, this);
         
-        //Entering player's nickname
-        enterPlayerNameTF(CC_CALLBACK_2(ChangeNicknameScene::playerNameTFevent, this), this);
+        enterPlayerNameTextField(CC_CALLBACK_2(ChangeNicknameScene::playerNameTFevent, this), this);
         
         return true;
     }

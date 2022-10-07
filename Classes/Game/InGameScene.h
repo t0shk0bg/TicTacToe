@@ -57,13 +57,17 @@ namespace NS_Game {
         virtual bool init() override;
         virtual void update(float dt) override;
         
+        /// Processes turns one by one
         void processTurns();
         
+        /// Single touch event listener.
         bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
-        void delayedEndGameScene(float a);
         
+        /// Returns board position for the current move
         NS_GameCore::BoardPosition getPositionForPlayerTurn();
         
+        /// Processes single turn
+        /// - Parameter turn: Defines which turn is it
         void processTurn(Turn turn);
         
     private:

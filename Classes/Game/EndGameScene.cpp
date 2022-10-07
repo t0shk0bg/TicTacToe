@@ -44,10 +44,8 @@ namespace NS_Game {
         if(!Scene::init())
             return false;
         
-        //Loading background image
         loadBackground(this);
         
-        //Showing outcome label
         ShowResultLabel();
         
         ShowMenu();

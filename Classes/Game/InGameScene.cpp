@@ -70,8 +70,6 @@ namespace NS_Game {
             
             if(isWinner)
             {
-                log("There is a winner!");
-                
                 auto& winner = _gameCore.getWinner();
                 
                 for(uint8_t i = 0; i < CORE_BOARD_SIZE; i++)
@@ -86,13 +84,13 @@ namespace NS_Game {
             
             if(isDraw)
             {
-                log("Draw game");
-                
                 _gameOutcome.result = GameOutcomeResult::draw;
                 delay = ANIM_DRAW_DELAY;
             }
             
-            scheduleOnce(CC_SCHEDULE_SELECTOR(InGameScene::delayedEndGameScene), delay);
+            scheduleOnce([this](float) -> void {
+                MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, EndGameScene::createScene(_gameOutcome), false));
+            }, delay, "delaySceneTransition");
         }
     }
 
@@ -118,11 +116,6 @@ namespace NS_Game {
         _eventDispatcher->pauseEventListenersForTarget(this);
         
         return true;
-    }
-
-    void InGameScene::delayedEndGameScene(float dt)
-    {
-        MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, EndGameScene::createScene(_gameOutcome), false));
     }
 
     BoardPosition InGameScene::getPositionForPlayerTurn()
