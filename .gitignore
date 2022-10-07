@@ -4,7 +4,17 @@ proj.android/
 proj.linux/
 proj.win32
 
-proj.ios_mac/ios-build
+proj.ios_mac/ios-build/build
+proj.ios_mac/ios-build/*.cmake
+proj.ios_mac/ios-build/*.txt
+proj.ios_mac/ios-build/CMakeFiles
+proj.ios_mac/ios-build/CMakeScripts
+proj.ios_mac/ios-build/Debug-iphoneos
+proj.ios_mac/ios-build/Debug-iphonesimulator
+proj.ios_mac/ios-build/EagerLinkingTBDs
+proj.ios_mac/ios-build/engine
+proj.ios_mac/ios-build/lib
+proj.ios_mac/ios-build/TicTacToe.build
 proj.ios_mac/mac
 
 .DS_Store
