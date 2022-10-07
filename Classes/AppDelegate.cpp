@@ -23,12 +23,12 @@
  ****************************************************************************/
 
 #include "AppDelegate.h"
-#include "Scenes/EntryPointScene.h"
-#include "Scenes/MainMenuScene.h"
+#include "Game/EntryPointScene.h"
+#include "Game/MainMenuScene.h"
 
 USING_NS_CC;
 
-namespace TicTacToe {
+namespace NS_Game {
 
     static Size designResolutionSize = Size(480, 320);
     static Size smallResolutionSize = Size(480, 320);

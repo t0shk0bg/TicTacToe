@@ -81,7 +81,8 @@ namespace NS_GameCore {
                         _winner.coordinates[i].col = i;
                     }
                     
-                    _winner.winnerSign = static_cast<Signature>(_board[row][0]);
+                    _winner.winnerSign = static_cast<BasicSignature>(_board[row][0]);
+                    _winner.isWinner = true;
                 }
                 
                 if(_board[row][0] == _botSign)
@@ -108,7 +109,8 @@ namespace NS_GameCore {
                         _winner.coordinates[i].col = col;
                     }
                     
-                    _winner.winnerSign = static_cast<Signature>(_board[0][col]);
+                    _winner.winnerSign = static_cast<BasicSignature>(_board[0][col]);
+                    _winner.isWinner = true;
                 }
                 
                 if(_board[0][col] == _botSign)
@@ -133,7 +135,8 @@ namespace NS_GameCore {
                     _winner.coordinates[i].col = i;
                 }
                 
-                _winner.winnerSign = static_cast<Signature>(_board[0][0]);
+                _winner.winnerSign = static_cast<BasicSignature>(_board[0][0]);
+                _winner.isWinner = true;
             }
             
             if(_board[0][0] == _botSign)
@@ -152,7 +155,8 @@ namespace NS_GameCore {
                     _winner.coordinates[i].col = c;
                 }
                 
-                _winner.winnerSign = static_cast<Signature>(_board[0][2]);
+                _winner.winnerSign = static_cast<BasicSignature>(_board[0][2]);
+                _winner.isWinner = true;
             }
             
             if(_board[0][2] == _botSign)

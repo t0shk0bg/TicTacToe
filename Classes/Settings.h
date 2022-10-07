@@ -77,7 +77,7 @@ namespace TicTacToe {
 	#define ANIM_WIN_DELAY              2.0f
 	#define ANIM_WIN_BLINKS             5
 	#define ANIM_DRAW_DELAY             1.0f
-	#define ANIM_SCENE_TRANSIT          1.2f
+	#define ANIM_SCENE_TRANSIT          1.0f
 	#define ANIM_BOT_TURN_DELAY         0.5f
 
 	//Helpers

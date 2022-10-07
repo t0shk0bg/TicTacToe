@@ -34,14 +34,22 @@ namespace NS_Game {
 
     class InGameScene: public cocos2d::Scene, MainScene
     {
+    private:
+        enum Turn: uint8_t
+        {
+            none = 0,
+            player,
+            bot
+        };
+        
     public:
         CREATE_FUNC(InGameScene);
         static cocos2d::Scene* createScene();
         
     public:
         InGameScene():
-            _gameCore(NS_Game::GameCore(static_cast<NS_Game::BasicSignature>(cocos2d::UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
-            _botAllowedToPlay(false)
+            _gameCore(NS_GameCore::GameCore(static_cast<NS_GameCore::BasicSignature>(cocos2d::UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
+            _botAllowedToPlay(false), _lastTurn(Turn::none)
         {
             this->setName(__FUNCTION__);
         }
@@ -54,26 +62,19 @@ namespace NS_Game {
         bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event);
         void delayedEndGameScene(float a);
         
-        NS_Game::BoardPosition getPositionForPlayerTurn();
+        NS_GameCore::BoardPosition getPositionForPlayerTurn();
         
         void processTurn(Turn turn);
         
     private:
-        NS_Game::GameCore _gameCore;
+        NS_GameCore::GameCore _gameCore;
         cocos2d::Sprite* _sprites[CORE_BOARD_SIZE][CORE_BOARD_SIZE];
         
         cocos2d::Vec2 _playerMove;
         bool _botAllowedToPlay;
+        Turn _lastTurn;
         
         GameOutcome _gameOutcome;
-
-    private:
-        enum Turn: uint8_t
-        {
-            none = 0,
-            player,
-            bot
-        };
     };
 
 }

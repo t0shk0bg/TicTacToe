@@ -83,7 +83,7 @@ namespace NS_Game {
             settingsMenuItems.pushBack(MenuItemFont::create(UI_CHANGE_NICKNAME, [this](Ref* pSender) -> void {
                 MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, ChangeNicknameScene::createScene(), false));
             }));
-            settingsMenuItems.pushBack(MenuItemFont::create(UI_PLAYER_SIGN + userDefault->getStringForKey(UD_KEY_SIGNATURE), [&](Ref* pSender) -> void {
+            settingsMenuItems.pushBack(MenuItemFont::create(UI_PLAYER_SIGN + userDefault->getStringForKey(UD_KEY_SIGNATURE), [=](Ref* pSender) -> void {
                 SettingsScene::s_showMenuUpdate = true;
                 
                 userDefault->setStringForKey(UD_KEY_SIGNATURE, userDefault->getStringForKey(UD_KEY_SIGNATURE) == GAME_SIGN_X ? GAME_SIGN_O : GAME_SIGN_X);

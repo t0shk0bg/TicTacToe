@@ -22,7 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "MainScene.hpp"
+#include "MainScene.h"
 
 USING_NS_CC;
 

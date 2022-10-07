@@ -28,7 +28,7 @@ USING_NS_CC;
 
 namespace NS_Game {
 
-    using namespace NS_Game;
+    using namespace NS_GameCore;
 
     Scene* InGameScene::createScene()
     {
@@ -57,6 +57,8 @@ namespace NS_Game {
 
     void InGameScene::update(float dt)
     {
+        Scene::update(dt);
+        
         processTurns();
         
         bool isWinner = _gameCore.isWinner();
@@ -68,6 +70,8 @@ namespace NS_Game {
             
             if(isWinner)
             {
+                log("There is a winner!");
+                
                 auto& winner = _gameCore.getWinner();
                 
                 for(uint8_t i = 0; i < CORE_BOARD_SIZE; i++)
@@ -82,22 +86,21 @@ namespace NS_Game {
             
             if(isDraw)
             {
+                log("Draw game");
+                
                 _gameOutcome.result = GameOutcomeResult::draw;
                 delay = ANIM_DRAW_DELAY;
             }
             
             scheduleOnce(CC_SCHEDULE_SELECTOR(InGameScene::delayedEndGameScene), delay);
-            _eventDispatcher->resumeEventListenersForTarget(this);
         }
-        
-        Scene::update(dt);
     }
 
     void InGameScene::processTurns()
     {
         processTurn(Turn::player);
         
-        if(_botAllowedToPlay)
+        if(_botAllowedToPlay && _gameCore.movesLeft())
         {
             processTurn(Turn::bot);
             
@@ -150,13 +153,13 @@ namespace NS_Game {
     {
         BoardPosition position;
         BasicSignature signForThisTurn;
-
+        
         switch(turn)
         {
         case Turn::player:
         {
             position = getPositionForPlayerTurn();
-            signForThisTurn = getPlayerSign();
+            signForThisTurn = _gameCore.getPlayerSign();
 
             break;
         }
@@ -164,7 +167,7 @@ namespace NS_Game {
         case Turn::bot:
         {
             position = _gameCore.findBestBotMove();
-            signForThisTurn = getBotSign();
+            signForThisTurn = _gameCore.getBotSign();
 
             break;
         }
@@ -173,8 +176,11 @@ namespace NS_Game {
             CCASSERT(true, "Invalid turn!");
         }
 
-        if(_gameCode.move(position, signForThisTurn))
+        if((turn == _lastTurn) || _gameCore.move(position, signForThisTurn))
+        {
+            _eventDispatcher->resumeEventListenersForTarget(this);
             return;
+        }
 
         std::string signFileName;
         
@@ -191,8 +197,10 @@ namespace NS_Game {
            ((_visibleSize.height / 3) * (2 - position.row)) + 93));
 
         this->addChild(_sprites[position.row][position.col], 1);
+        
+        _lastTurn = turn;
 
-        if(turn == Turn::player)
+        if((turn == Turn::player) && _gameCore.movesLeft())
             scheduleOnce([this](float) -> void { _botAllowedToPlay = true; }, ANIM_BOT_TURN_DELAY, "botDisallowedToPlay");
     }
 

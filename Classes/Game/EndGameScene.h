@@ -42,7 +42,7 @@ namespace NS_Game {
         std::string winner;
         GameOutcomeResult result;
         
-        GameOutcome() {}
+        GameOutcome(): result(GameOutcomeResult::none) {}
         GameOutcome(const std::string& winr, GameOutcomeResult res): winner(winr), result(res) {}
     };
 
