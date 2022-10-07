@@ -25,7 +25,7 @@
 #include "EntryPointScene.h"
 #include "MainMenuScene.h"
 
-Scene * EntryPointScene::createScene()
+Scene* EntryPointScene::createScene()
 {
     return EntryPointScene::create();
 }
@@ -35,72 +35,34 @@ bool EntryPointScene::init()
     if(!Scene::init())
         return false;
     
-    Vec2 origin = _director->getVisibleOrigin();
-    
-    //Setting background
-    auto backgroundSprite = Sprite::create("background.jpeg");
-    
-    if(backgroundSprite == nullptr)
-        log("Problem loading: %s", backgroundSprite->getResourceName().c_str());
-    else
-    {
-        backgroundSprite->setPosition(Vec2((_visibleSize.width / 2), (_visibleSize.height / 2) + origin.y));
-        backgroundSprite->setScale(1.062f, 0.9f);
-        
-        this->addChild(backgroundSprite, 0);
-    }
+    //Loading background image
+    loadBackground(this);
     
     //Adding welcoming label
-    auto welcomeLabel = Label::createWithTTF("Welcome", "fonts/Marker Felt.ttf", 28);
-    
-    if(welcomeLabel == nullptr)
-        log("Problem loading: %s", welcomeLabel->getSystemFontName().c_str());
-    else
-    {
-        welcomeLabel->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 17) + origin.y));
-        this->addChild(welcomeLabel, 1);
-    }
+    showHeadLabel(UI_WELCOME_MSG, this);
     
     //Entering player's nickname
-    enterPlayerNameTF();
+    enterPlayerNameTF(CC_CALLBACK_2(EntryPointScene::playerNameTFevent, this), this);
     
     return true;
 }
 
-void EntryPointScene::enterPlayerNameTF()
-{
-    auto playerNameTextField = ui::TextField::create("Enter you nickname here :)", "fonts/Marker Felt.ttf", 28);
-    
-    if(playerNameTextField == nullptr)
-        log("Problem loading: %s", playerNameTextField->getFontName().c_str());
-    else
-    {
-        playerNameTextField->setMaxLength(25);
-        playerNameTextField->setMaxLengthEnabled(true);
-        playerNameTextField->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 15)));
-
-        playerNameTextField->addEventListener(CC_CALLBACK_2(EntryPointScene::playerNameTFevent, this));
-
-        this->addChild(playerNameTextField, 1);
-    }
-}
-
-void EntryPointScene::playerNameTFevent(Ref * sender, ui::TextField::EventType eType)
+void EntryPointScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
 {
     if(eType == ui::TextField::EventType::DETACH_WITH_IME)
     {
-        ui::TextField * playerNameTF = dynamic_cast<ui::TextField *>(sender);
+        ui::TextField* playerNameTF = dynamic_cast<ui::TextField*>(sender);
         
-        if(playerNameTF == nullptr)
-            log("Unable to perform dynamic conversion!");
-        else
-        {
-            auto userDefault = UserDefault::getInstance();
-            
-            userDefault->setStringForKey("nickname", playerNameTF->getString());
-            userDefault->setStringForKey("playerSign", "X");
-            
-            _director->replaceScene(TransitionPageTurn::create(1.2f, MainMenuScene::createScene(), false));
-        }
+        CCASSERT(playerNameTF, "Unable to perform dynamic conversion!");
+        
+        if(!playerNameTF->getString().length())
+            return;
+        
+        auto userDefault = UserDefault::getInstance();
+        
+        userDefault->setStringForKey(UD_KEY_NICKNAME, playerNameTF->getString());
+        userDefault->setStringForKey(UD_KEY_SIGNATURE, DEFAULT_GAME_SIGN);
+        
+        GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), false));
     }
 }

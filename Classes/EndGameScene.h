@@ -26,6 +26,8 @@
 
 #include "cocos2d.h"
 
+#include "GameLayout.hpp"
+
 USING_NS_CC;
 
 enum GameOutcomeResult: uint8_t
@@ -44,24 +46,23 @@ struct GameOutcome
     GameOutcome(const std::string& winr, GameOutcomeResult res): winner(winr), result(res) {}
 };
 
-class EndGameScene : public cocos2d::Scene
+class EndGameScene: public Scene, GameLayout
 {
 public:
     CREATE_FUNC(EndGameScene);
-    static Scene * createScene(GameOutcome gameOutcome);
+    static Scene* createScene(GameOutcome gameOutcome);
     
 public:
-    EndGameScene(): _director(Director::getInstance()), _visibleSize(_director->getVisibleSize()) {}
+    EndGameScene()
+    {
+        this->setName(__FUNCTION__);
+    }
     
     virtual bool init() override;
     
-    void ShowOutcomeLabel();
+    void ShowResultLabel();
     void ShowMenu();
     
 public:
-    static GameOutcome _gameOutcome;
-    
-private:
-    Director * _director;
-    Size _visibleSize;
+    static GameOutcome s_gameOutcome;
 };

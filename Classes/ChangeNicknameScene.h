@@ -26,45 +26,24 @@
 
 #include "cocos2d.h"
 
-#include "GameCore.h"
-#include "EndGameScene.h"
 #include "GameLayout.hpp"
 
 USING_NS_CC;
 
-class InGameScene: public Scene, GameLayout
+class ChangeNicknameScene: public Scene, GameLayout
 {
 public:
-    CREATE_FUNC(InGameScene);
     static cocos2d::Scene* createScene();
     
+    CREATE_FUNC(ChangeNicknameScene);
+    
 public:
-    InGameScene():
-        _gameCore(GameCore(static_cast<BasicSignature>(UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
-        _botAllowedToPlay(false)
+    ChangeNicknameScene()
     {
         this->setName(__FUNCTION__);
     }
     
     virtual bool init() override;
-    virtual void update(float dt) override;
     
-    void processTurns();
-    
-    bool onTouchBegan(Touch* touch, Event* event);
-    void delayedEndGameScene(float a);
-    
-    BoardPosition getPosition();
-    
-    bool playerTurn();
-    bool botTurn();
-    
-private:
-    GameCore _gameCore;
-    Sprite* _sprites[CORE_BOARD_SIZE][CORE_BOARD_SIZE];
-    
-    Vec2 _playerMove;
-    bool _botAllowedToPlay;
-    
-    GameOutcome _gameOutcome;
+    void playerNameTFevent(Ref* sender, ui::TextField::EventType eType);
 };

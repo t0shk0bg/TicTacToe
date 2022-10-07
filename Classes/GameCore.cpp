@@ -174,8 +174,7 @@ int8_t GameCore::minimax(uint8_t depth, bool isMax)
                 {
                     _board[i][j] = _botSign;
                     
-                    best = std::max(best,
-                                    minimax(depth + 1, !isMax));
+                    best = std::max(best, minimax((depth + 1), !isMax));
                     
                     _board[i][j] = Signature::signF;
                 }
@@ -192,8 +191,7 @@ int8_t GameCore::minimax(uint8_t depth, bool isMax)
                 {
                     _board[i][j] = _playerSign;
                     
-                    best = std::min(best,
-                                    minimax(depth + 1, !isMax));
+                    best = std::min(best, minimax((depth + 1), !isMax));
                     
                     _board[i][j] = Signature::signF;
                 }
@@ -237,26 +235,3 @@ int8_t GameCore::botMove(BoardPosition position)
 {
     return modifyBoard(position, _botSign);
 }
-
-//int main()
-/*{
-    Game gameCore;
-    
-    gameCore.modifyBoard(BoardPosition(0, 0), BasicSignature::basicSignX);
-    gameCore.modifyBoard(BoardPosition(0, 1), BasicSignature::basicSignO);
-    gameCore.modifyBoard(BoardPosition(0, 2), BasicSignature::basicSignX);
-    
-    gameCore.modifyBoard(BoardPosition(1, 0), BasicSignature::basicSignO);
-    gameCore.modifyBoard(BoardPosition(1, 1), BasicSignature::basicSignO);
-    gameCore.modifyBoard(BoardPosition(1, 2), BasicSignature::basicSignX);
-    
-    //gameCore.modifyBoard(BoardPosition(2, 0), BasicSignature::basicSignX);
-    //gameCore.modifyBoard(BoardPosition(2, 1), BasicSignature::basicSignX);
-    //gameCore.modifyBoard(BoardPosition(2, 2), BasicSignature::basicSignO);
-    
-    BoardPosition bp = gameCore.findBestBotMove();
-    
-    printf("ROW: %d COL: %d\n\n", bp.row, bp.col);
-    
-    return 0;
-}*/

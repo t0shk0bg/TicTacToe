@@ -26,25 +26,25 @@
 
 #include "cocos2d.h"
 
+#include "GameLayout.hpp"
+
 USING_NS_CC;
 
-class SettingsScene : public Scene
+class SettingsScene: public Scene, GameLayout
 {
 public:
     CREATE_FUNC(SettingsScene);
-    static cocos2d::Scene * createScene();
+    static cocos2d::Scene* createScene();
     
 public:
-    SettingsScene() : _director(Director::getInstance()), _visibleSize(_director->getVisibleSize()) {}
+    SettingsScene()
+    {
+        this->setName(__FUNCTION__);
+    }
     
     virtual bool init() override;
+    virtual void update(float delta) override;
     virtual void onExit() override;
     
-    void updatePerFrame(float dt);
-    
     void ShowMenu();
-    
-private:
-    Director * _director;
-    Size _visibleSize;
 };

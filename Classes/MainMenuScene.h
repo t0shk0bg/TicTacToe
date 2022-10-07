@@ -26,22 +26,23 @@
 
 #include "cocos2d.h"
 
+#include "GameLayout.hpp"
+
 USING_NS_CC;
 
-class MainMenuScene : public cocos2d::Scene
+class MainMenuScene: public Scene, GameLayout
 {
 public:
     CREATE_FUNC(MainMenuScene);
     static cocos2d::Scene* createScene();
     
 public:
-    MainMenuScene() : _director(Director::getInstance()), _visibleSize(_director->getVisibleSize()) {}
+    MainMenuScene()
+    {
+        this->setName(__FUNCTION__);
+    }
     
     virtual bool init() override;
     
     void ShowMenu();
-    
-private:
-    Director * _director;
-    Size _visibleSize;
 };

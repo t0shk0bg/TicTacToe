@@ -25,11 +25,12 @@
 #pragma once
 
 #include "cocos2d.h"
-#include "ui/CocosGUI.h"
+
+#include "GameLayout.hpp"
 
 USING_NS_CC;
 
-class EntryPointScene : public cocos2d::Scene
+class EntryPointScene: public Scene, GameLayout
 {
 public:
     static cocos2d::Scene* createScene();
@@ -37,14 +38,12 @@ public:
     CREATE_FUNC(EntryPointScene);
     
 public:
-    EntryPointScene() : _director(Director::getInstance()), _visibleSize(_director->getVisibleSize()) {}
+    EntryPointScene()
+    {
+        this->setName(__FUNCTION__);
+    }
     
     virtual bool init() override;
     
-    void enterPlayerNameTF();
-    void playerNameTFevent(Ref * sender, ui::TextField::EventType eType);
-    
-private:
-    Director * _director;
-    Size _visibleSize;
+    void playerNameTFevent(Ref* sender, ui::TextField::EventType eType);
 };

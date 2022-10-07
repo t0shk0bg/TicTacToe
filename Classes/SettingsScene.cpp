@@ -24,10 +24,11 @@
 
 #include "SettingsScene.h"
 #include "MainMenuScene.h"
+#include "ChangeNicknameScene.h"
 
 static bool showMenuUpdate = true;
 
-Scene * SettingsScene::createScene()
+Scene* SettingsScene::createScene()
 {
     return SettingsScene::create();
 }
@@ -37,78 +38,61 @@ bool SettingsScene::init()
     if(!Scene::init())
         return false;
     
-    Vec2 origin = _director->getVisibleOrigin();
+    //Loading background image
+    loadBackground(this);
     
-    //Setting background
-    auto backgroundSprite = Sprite::create("background.jpeg");
-    
-    if(backgroundSprite == nullptr)
-        log("Problem loading: %s", backgroundSprite->getResourceName().c_str());
-    else
-    {
-        backgroundSprite->setPosition(Vec2((_visibleSize.width / 2), (_visibleSize.height / 2) + origin.y));
-        backgroundSprite->setScale(1.062f, 0.9f);
-        
-        this->addChild(backgroundSprite, 0);
-    }
-    
-    //Adding welcoming label
-    auto welcomeMSG = std::string("Welcome ") + UserDefault::getInstance()->getStringForKey("nickname");
-    auto welcomeLabel = Label::createWithTTF(welcomeMSG, "fonts/Marker Felt.ttf", 28);
-    
-    if(welcomeLabel == nullptr)
-        log("Problem loading: %s", welcomeLabel->getSystemFontName().c_str());
-    else
-    {
-        welcomeLabel->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 17) + origin.y));
-        this->addChild(welcomeLabel, 1);
-    }
+    //Adding settings label
+    showHeadLabel(UI_SETTINGS, this);
     
     //Showing the settings menu
     ShowMenu();
     
-    schedule(CC_SCHEDULE_SELECTOR(SettingsScene::updatePerFrame), 0);
+    scheduleUpdate();
     
     return true;
 }
 
-void SettingsScene::onExit()
-{
-    Scene::onExit();
-    
-    showMenuUpdate = true;
-    unschedule(CC_SCHEDULE_SELECTOR(SettingsScene::updatePerFrame));
-}
-
-void SettingsScene::updatePerFrame(float dt)
+void SettingsScene::update(float delta)
 {
     //Updating the settings menu
     ShowMenu();
+    
+    Scene::update(delta);
+}
+
+void SettingsScene::onExit()
+{
+    showMenuUpdate = true;
+    
+    Scene::onExit();
 }
 
 void SettingsScene::ShowMenu()
 {
     if(showMenuUpdate)
     {
-        Vector<MenuItem *> settingsMenuItems;
-        
+        Vector<MenuItem*> settingsMenuItems;
         UserDefault* userDefault = UserDefault::getInstance();
         
         MenuItemFont::setFontSize(24);
         
-        settingsMenuItems.pushBack(MenuItemFont::create("Player sign: " + userDefault->getStringForKey("playerSign"), [=](Ref* pSender) {
+        settingsMenuItems.pushBack(MenuItemFont::create(UI_CHANGE_NICKNAME, [=](Ref* pSender) {
+            GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, ChangeNicknameScene::createScene(), false));
+        }));
+        settingsMenuItems.pushBack(MenuItemFont::create(UI_PLAYER_SIGN + userDefault->getStringForKey(UD_KEY_SIGNATURE), [=](Ref* pSender) {
             showMenuUpdate = true;
             
-            userDefault->setStringForKey("playerSign", userDefault->getStringForKey("playerSign")[0] == 'X' ? "O" : "X");
+            userDefault->setStringForKey(UD_KEY_SIGNATURE, userDefault->getStringForKey(UD_KEY_SIGNATURE) == GAME_SIGN_X ? GAME_SIGN_O : GAME_SIGN_X);
             
             this->removeChildByName("settingsMenu");
         }));
-        settingsMenuItems.pushBack(MenuItemFont::create("Go back", [&](Ref* pSender) {
-            _director->replaceScene(TransitionPageTurn::create(1.2f, MainMenuScene::createScene(), true));
+        settingsMenuItems.pushBack(MenuItemFont::create(UI_GO_BACK, [&](Ref* pSender) {
+            GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), true));
         }));
         
         auto settingsMenu = Menu::createWithArray(settingsMenuItems);
         
+        settingsMenu->setColor(Color3B(0, 0, 0));
         settingsMenu->alignItemsVerticallyWithPadding(10);
         settingsMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
         

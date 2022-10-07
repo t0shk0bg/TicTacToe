@@ -22,49 +22,44 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#pragma once
+#include "ChangeNicknameScene.h"
+#include "SettingsScene.h"
 
-#include "cocos2d.h"
-
-#include "GameCore.h"
-#include "EndGameScene.h"
-#include "GameLayout.hpp"
-
-USING_NS_CC;
-
-class InGameScene: public Scene, GameLayout
+Scene* ChangeNicknameScene::createScene()
 {
-public:
-    CREATE_FUNC(InGameScene);
-    static cocos2d::Scene* createScene();
+    return ChangeNicknameScene::create();
+}
+
+bool ChangeNicknameScene::init()
+{
+    if(!Scene::init())
+        return false;
     
-public:
-    InGameScene():
-        _gameCore(GameCore(static_cast<BasicSignature>(UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
-        _botAllowedToPlay(false)
+    //Loading background image
+    loadBackground(this);
+    
+    //Adding settings label
+    showHeadLabel(UI_SETTINGS, this);
+    
+    //Entering player's nickname
+    enterPlayerNameTF(CC_CALLBACK_2(ChangeNicknameScene::playerNameTFevent, this), this);
+    
+    return true;
+}
+
+void ChangeNicknameScene::playerNameTFevent(Ref* sender, ui::TextField::EventType eType)
+{
+    if(eType == ui::TextField::EventType::DETACH_WITH_IME)
     {
-        this->setName(__FUNCTION__);
+        ui::TextField* playerNameTF = dynamic_cast<ui::TextField*>(sender);
+        
+        CCASSERT(playerNameTF, "Unable to perform dynamic conversion!");
+        
+        if(!playerNameTF->getString().length())
+            return;
+        
+        UserDefault::getInstance()->setStringForKey(UD_KEY_NICKNAME, playerNameTF->getString());
+        
+        GameLayout::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, SettingsScene::createScene(), true));
     }
-    
-    virtual bool init() override;
-    virtual void update(float dt) override;
-    
-    void processTurns();
-    
-    bool onTouchBegan(Touch* touch, Event* event);
-    void delayedEndGameScene(float a);
-    
-    BoardPosition getPosition();
-    
-    bool playerTurn();
-    bool botTurn();
-    
-private:
-    GameCore _gameCore;
-    Sprite* _sprites[CORE_BOARD_SIZE][CORE_BOARD_SIZE];
-    
-    Vec2 _playerMove;
-    bool _botAllowedToPlay;
-    
-    GameOutcome _gameOutcome;
-};
+}
