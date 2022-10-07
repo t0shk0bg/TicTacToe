@@ -8,3 +8,6 @@ In order to build the project, navigate to "TicTacToe/proj.ios_mac/ios-build/" a
 
 # Download
 https://github.com/t0shk0bg/TicTacToe.git
+
+# Video
+https://www.youtube.com/shorts/k7s7iid1r40
