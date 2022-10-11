@@ -26,7 +26,7 @@
 
 #include "cocos2d.h"
 
-namespace TicTacToe {
+namespace NS_Game {
 
     struct SpriteNode
     {

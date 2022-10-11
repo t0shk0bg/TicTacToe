@@ -55,7 +55,7 @@ namespace NS_Game {
     public:
         EndGameScene()
         {
-            this->setName(__FUNCTION__);
+            setName(__FUNCTION__);
         }
         
         virtual bool init() override;

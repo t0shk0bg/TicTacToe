@@ -51,7 +51,7 @@ namespace NS_Game {
             _gameCore(NS_GameCore::GameCore(static_cast<NS_GameCore::BasicSignature>(cocos2d::UserDefault::getInstance()->getStringForKey(UD_KEY_SIGNATURE)[0]))),
             _botAllowedToPlay(false), _lastTurn(Turn::none)
         {
-            this->setName(__FUNCTION__);
+            setName(__FUNCTION__);
         }
         
         virtual bool init() override;

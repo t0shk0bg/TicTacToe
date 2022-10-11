@@ -98,6 +98,9 @@ namespace NS_Game {
         auto userDefault = UserDefault::getInstance();
         Scene* scene;
         
+        //userDefault->deleteValueForKey(UD_KEY_NICKNAME);
+        //userDefault->deleteValueForKey(UD_KEY_SIGNATURE);
+        
         if(userDefault->getStringForKey(UD_KEY_NICKNAME).length() && userDefault->getStringForKey(UD_KEY_SIGNATURE).length())
             scene = MainMenuScene::createScene();
         else

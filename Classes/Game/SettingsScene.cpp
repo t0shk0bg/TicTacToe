@@ -85,7 +85,7 @@ namespace NS_Game {
                 
                 userDefault->setStringForKey(UD_KEY_SIGNATURE, userDefault->getStringForKey(UD_KEY_SIGNATURE) == GAME_SIGN_X ? GAME_SIGN_O : GAME_SIGN_X);
                 
-                this->removeChildByName("settingsMenu");
+                removeChildByName("settingsMenu");
             }));
             settingsMenuItems.pushBack(MenuItemFont::create(UI_GO_BACK, [this](Ref* pSender) -> void {
                 MainScene::_director->replaceScene(TransitionPageTurn::create(ANIM_SCENE_TRANSIT, MainMenuScene::createScene(), true));
@@ -97,7 +97,7 @@ namespace NS_Game {
             settingsMenu->alignItemsVerticallyWithPadding(10);
             settingsMenu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
             
-            this->addChild(settingsMenu, 1, "settingsMenu");
+            addChild(settingsMenu, 1, "settingsMenu");
             
             s_showMenuUpdate = false;
         }

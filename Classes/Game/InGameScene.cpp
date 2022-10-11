@@ -189,7 +189,7 @@ namespace NS_Game {
            (((_visibleSize.width - 174) / 3) * (position.col + 1) + 37),
            ((_visibleSize.height / 3) * (2 - position.row)) + 93));
 
-        this->addChild(_sprites[position.row][position.col], 1);
+        addChild(_sprites[position.row][position.col], 1);
         
         _lastTurn = turn;
 

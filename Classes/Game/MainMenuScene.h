@@ -39,7 +39,7 @@ namespace NS_Game {
     public:
         MainMenuScene()
         {
-            this->setName(__FUNCTION__);
+            setName(__FUNCTION__);
         }
         
         virtual bool init() override;

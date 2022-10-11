@@ -28,12 +28,12 @@ USING_NS_CC;
 
 namespace NS_Game {
 
-    void MainScene::loadBackground(Scene* node)
+    void MainScene::loadBackground(Scene* scene)
     {
         std::string backgroundImageName;
         Vec2 backgroundScale;
 
-        if(node->getName() == IN_GAME_SCENE_NAME)
+        if(scene->getName() == IN_GAME_SCENE_NAME)
         {
             backgroundImageName = IMAGE_IN_GAME_BG;
             backgroundScale.set(1.064f, 0.9f);
@@ -51,7 +51,7 @@ namespace NS_Game {
         backgroundSprite->setScale(backgroundScale.x, backgroundScale.y);
         backgroundSprite->setPosition(Vec2((_visibleSize.width / 2), (_visibleSize.height / 2) + _origin.y));
 
-        node->addChild(backgroundSprite, 0);
+		scene->addChild(backgroundSprite, 0);
     }
 
     void MainScene::showHeadLabel(const std::string& text, Scene* scene)

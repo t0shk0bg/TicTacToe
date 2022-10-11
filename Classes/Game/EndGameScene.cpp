@@ -94,7 +94,7 @@ namespace NS_Game {
         menu->alignItemsVerticallyWithPadding(10);
         menu->setPosition(Vec2((_visibleSize.width / 2), ((_visibleSize.height / 20) * 13)));
         
-        this->addChild(menu, 1);
+        addChild(menu, 1);
     }
 
 }
